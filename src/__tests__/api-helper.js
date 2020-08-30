@@ -36,9 +36,7 @@ export function assertStatus(status) {
   return async function statusAsserter(resp) {
     if (resp.status !== status) {
       throw new Error(
-        `Expected ${status} but got ${resp.status}: ${resp.request.method} ${
-          resp.request.path
-        }`
+        `Expected ${status} but got ${resp.status}: ${resp.request.method} ${resp.request.path}`
       )
     }
     return resp.data
@@ -48,9 +46,7 @@ export function assertStatus(status) {
 function catchAndLog(err) {
   if (err.response) {
     console.error(
-      `Error ${err.response.status} in request ${err.response.request.method} ${
-        err.response.request.path
-      }`,
+      `Error ${err.response.status} in request ${err.response.request.method} ${err.response.request.path}`,
       err.response.data
     )
   }
