@@ -1,7 +1,8 @@
 import { createContainer, Lifetime, InjectionMode, asValue } from 'awilix'
-import { logger } from './logger'
 
+import { logger } from './logger'
 import { connection } from './database'
+import { passportLib } from './passport'
 
 /**
  * Using Awilix, the following files and folders (glob patterns)
@@ -14,7 +15,9 @@ const modulesToLoad = [
   ['services/*.js', Lifetime.SCOPED],
   // Stores will be singleton (1 instance per process).
   // This is just for demo purposes, you can do whatever you want.
-  ['stores/*.js', Lifetime.SINGLETON]
+  ['stores/*.js', Lifetime.SINGLETON],
+
+  ['models/*.js', Lifetime.SCOPED]
 ]
 
 /**
@@ -41,6 +44,8 @@ export async function configureContainer() {
       // so provide it as-is to anyone who wants it.
       logger: asValue(logger),
       // register database connection object
-      connection: await connection()
+      connection: asValue(await connection()),
+      // available as injection
+      passportLib: asValue(passportLib)
     })
 }
