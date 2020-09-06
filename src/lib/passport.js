@@ -22,13 +22,18 @@ passport.use(
   )
 )
 
-/**
- *
- *
- * @export
- * @param {*} data
- * @returns
- */
-export function sign(data) {
-  return jwt.sign(data, key)
+// /**
+//  *
+//  *
+//  * @export
+//  * @param {*} data
+//  * @returns
+//  */
+// export function sign(data) {
+//   return jwt.sign(data, key)
+// }
+export const passportLib = {
+  sign(data) {
+    return jwt.sign(data, key)
+  }
 }
