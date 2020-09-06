@@ -1,6 +1,7 @@
 import { createController } from 'awilix-koa'
 
-// import notFoundHandler from '../middleware/not-found';
+import { authFormRequest } from '../middleware/form-request/auth'
+
 // This is our API controller.
 // All it does is map HTTP calls to service calls.
 // This way our services could be used in any type of app, not
@@ -37,11 +38,21 @@ const api = authService => ({
 // https://github.com/jeffijoe/awilix-router-core
 export default createController(api)
   .prefix('/auth')
-  .post('/login', 'loginUser')
-  .post('/login-fb', 'loginWithFacebook')
-  .post('/login-li', 'loginWithLinkedIn')
-  .post('/login-google', 'loginWithGoogle')
-  .post('/forget-password', 'forgetPassword')
-  .post('/reset-password', 'resetPassword')
-  .post('/', 'createUser')
+  .post('/login', 'loginUser', { before: [authFormRequest('loginUser')] })
+  .post('/login-fb', 'loginWithFacebook', {
+    before: [authFormRequest('loginSocial')]
+  })
+  .post('/login-li', 'loginWithLinkedIn', {
+    before: [authFormRequest('loginSocial')]
+  })
+  .post('/login-google', 'loginWithGoogle', {
+    before: [authFormRequest('loginSocial')]
+  })
+  .post('/forget-password', 'forgetPassword', {
+    before: [authFormRequest('forgetPassword')]
+  })
+  .post('/reset-password', 'resetPassword', {
+    before: [authFormRequest('resetPassword')]
+  })
+  .post('/', 'createUser', { before: [authFormRequest('createUser')] })
   .post('/logout', 'logoutUser')
