@@ -22,6 +22,13 @@ export default class ProfileService {
     this.store = profileStore
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @returns
+   * @memberof ProfileService
+   */
   async get(id) {
     assertId(id)
     // If `profileStore.get()` returns a falsy value, we throw a
@@ -53,6 +60,14 @@ export default class ProfileService {
     return this.store.create(pickProps(data))
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @param {*} data
+   * @returns
+   * @memberof ProfileService
+   */
   async update(id, data) {
     assertId(id)
     BadRequest.assert(data, 'No profile payload given')
@@ -63,5 +78,17 @@ export default class ProfileService {
     // Prevent overposting.
     const picked = pickProps(data)
     return this.store.update(id, picked)
+  }
+
+  /**
+   *
+   *
+   * @param {*} id
+   * @returns
+   * @memberof ProfileService
+   */
+  async remove(id) {
+    // Make sure the model exists by calling `get`.
+    return this.store.remove(await this.get(id))
   }
 }
