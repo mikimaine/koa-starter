@@ -1,5 +1,6 @@
 import { createContainer, Lifetime, InjectionMode, asValue } from 'awilix'
 
+import config from '../config/core-config'
 import { logger } from './logger'
 import { connection } from './database'
 import { passportLib } from './passport'
@@ -17,7 +18,7 @@ const modulesToLoad = [
   // This is just for demo purposes, you can do whatever you want.
   ['stores/*.js', Lifetime.SINGLETON],
 
-  ['models/*.js', Lifetime.SCOPED]
+  ['models/*.js', Lifetime.SINGLETON]
 ]
 
 /**
@@ -42,9 +43,11 @@ export async function configureContainer() {
     .register({
       // Our logger is already constructed,
       // so provide it as-is to anyone who wants it.
+      config: asValue(config),
       logger: asValue(logger),
       // register database connection object
       connection: asValue(await connection()),
+
       // available as injection
       passportLib: asValue(passportLib)
     })
