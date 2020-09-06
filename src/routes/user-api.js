@@ -2,8 +2,7 @@ import { createController } from 'awilix-koa'
 
 import passport from 'koa-passport'
 
-// import { hasPermission } from '../middleware/permission'
-// import '../lib/passport'
+import { hasPermission } from '../middleware/permission'
 
 // This is our API controller.
 // All it does is map HTTP calls to service calls.
@@ -30,7 +29,6 @@ export default createController(api)
   .prefix('/user')
   .before([passport.authenticate('jwt', { session: false })])
   .post('', 'createUser')
-  // .get('', 'findUsers', { before: [hasPermission(['view users'])] })
-  .get('', 'findUsers')
+  .get('', 'findUsers', { before: [hasPermission(['view any user'])] })
   .put('/update-password/:id', 'updatePassword')
   .patch('/:id', 'update')
