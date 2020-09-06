@@ -43,11 +43,11 @@ export default class MediaService {
       limit: parseInt(params.limits) || 50
     }
 
-    const airports = await this.store.paginate(query, options)
-    if (!airports) {
-      throw new Error('There was an error retrieving airports by their status.')
+    const medias = await this.store.paginate(query, options)
+    if (!medias) {
+      throw new Error('There was an error retrieving medias by filter.')
     } else {
-      return airports
+      return medias
     }
   }
 
