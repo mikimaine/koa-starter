@@ -1,6 +1,8 @@
 import { createContainer, Lifetime, InjectionMode, asValue } from 'awilix'
 import { logger } from './logger'
 
+import { connection } from './database'
+
 /**
  * Using Awilix, the following files and folders (glob patterns)
  * will be loaded.
@@ -20,7 +22,7 @@ const modulesToLoad = [
  *
  * @return {Object} The container.
  */
-export function configureContainer() {
+export async function configureContainer() {
   const opts = {
     // Classic means Awilix will look at function parameter
     // names rather than passing a Proxy.
@@ -37,6 +39,8 @@ export function configureContainer() {
     .register({
       // Our logger is already constructed,
       // so provide it as-is to anyone who wants it.
-      logger: asValue(logger)
+      logger: asValue(logger),
+      // register database connection object
+      connection: await connection()
     })
 }

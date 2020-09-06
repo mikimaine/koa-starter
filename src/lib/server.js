@@ -1,21 +1,17 @@
 import * as http from 'http'
 import Koa from 'koa'
 import cors from '@koa/cors'
-import mongoose from 'mongoose'
 import respond from 'koa-respond'
 import bodyParser from 'koa-bodyparser'
 import compress from 'koa-compress'
 import { scopePerRequest, loadControllers } from 'awilix-koa'
 
-import { env } from './env'
 import { logger } from './logger'
 
 import { configureContainer } from './container'
 import { notFoundHandler } from '../middleware/not-found'
 import { errorHandler } from '../middleware/error-handler'
 import { registerContext } from '../middleware/register-context'
-
-mongoose.Promise = require('bluebird')
 
 /**
  * Creates and returns a new Koa application.
@@ -24,20 +20,6 @@ mongoose.Promise = require('bluebird')
  * @return {Promise<http.Server>} The configured app.
  */
 export async function createServer() {
-  logger.debug('Connecting to database...')
-  mongoose
-    .connect(env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true
-    })
-    .then(response => {
-      logger.debug('mongo connection created')
-    })
-    .catch(err => {
-      logger.debug('Error connecting to Mongo')
-      logger.debug(err)
-    })
   logger.debug('Creating server...')
   const app = new Koa()
 
