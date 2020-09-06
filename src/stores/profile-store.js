@@ -1,9 +1,12 @@
 import { pick } from 'lodash'
 
 /**
- * Profile model store.
+ * Profile Store
  *
- * gets the logger injected.
+ * @export
+ * @param {*} logger
+ * @param {*} profileModel
+ * @returns
  */
 export default function createProfileStore(logger, profileModel) {
   const model = profileModel
@@ -38,7 +41,7 @@ export default function createProfileStore(logger, profileModel) {
       logger.debug(`Finding and paginating ${collectionName}`)
       return model.paginate(
         query,
-        Object.assign(options, { select: returnFields })
+        Object.assign(options, { select: returnFields, populate: population })
       )
     },
     /**
@@ -49,9 +52,15 @@ export default function createProfileStore(logger, profileModel) {
      */
     async get(id) {
       logger.debug(`Getting ${collectionName} with id ${id}`)
-      const found = await model.find({
-        _id: id.toString()
-      })
+      const found = await model
+        .findOne(
+          {
+            _id: id.toString()
+          },
+          returnFields
+        )
+        .populate(population)
+        .exec()
       if (!found) {
         return null
       }
@@ -66,11 +75,14 @@ export default function createProfileStore(logger, profileModel) {
      */
     async getBy(data) {
       logger.debug(`Getting ${collectionName}`)
-      const found = await model.findOne(data)
+      const found = await model
+        .findOne(data, returnFields)
+        .populate(population)
+        .exec()
       if (!found) {
         return null
       }
-      return pick(found, [...Object.keys(returnFields)])
+      return found
     },
 
     /**
@@ -96,18 +108,30 @@ export default function createProfileStore(logger, profileModel) {
       const result = await model.findOneAndUpdate(
         { _id: id.toString() },
         data,
-        { new: true, select: returnFields }
+        { new: true, select: returnFields, populate: population }
       )
       logger.debug(`Updated ${collectionName} ${id}`, result)
       return result
     },
 
+    /**
+     *
+     *
+     * @param {*} data
+     * @returns
+     */
     async uploadMedia(data) {
       const result = await collectionName.insertOne({
         imagePath: data.filePath
       })
       logger.debug(`Created new ${collectionName}`, result)
       return pick(result, [...Object.keys(returnFields)])
+    },
+
+    async remove(item) {
+      item.remove()
+      logger.debug(`Removed ${collectionName} ${item._id}`)
+      return item
     }
   }
 }
