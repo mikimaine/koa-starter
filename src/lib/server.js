@@ -28,6 +28,7 @@ export async function createServer() {
 
   // get migration store
   const migration = container.resolve('migrationStore')
+
   // execute permission migration
   await migration.migratePermission()
   // execute role migration

@@ -9,7 +9,11 @@ import { pick } from 'lodash'
  * @param {*} notificationModel
  * @returns
  */
-export default function createTripStore(logger, userModel, notificationModel) {
+export default function createNotificationStore(
+  logger,
+  userModel,
+  notificationModel
+) {
   const model = notificationModel
 
   const collectionName = model.collection.name
