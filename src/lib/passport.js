@@ -34,6 +34,14 @@ passport.use(
 // }
 export const passportLib = {
   sign(data) {
+    let permissions = data.roles.reduce(
+      (pre, next) => [...pre, ...next.permissions.map(v => v.name)],
+      []
+    )
+    data.permissions = Array.from(
+      new Set([...data.permissions, ...permissions])
+    )
+    delete data.roles
     return jwt.sign(data, key)
   }
 }
