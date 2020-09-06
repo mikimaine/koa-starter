@@ -39,4 +39,4 @@ PermissionSchema.pre('save', function preSave(next) {
   next()
 })
 
-module.exports = mongoose.model('Permissions', PermissionSchema)
+export default mongoose.model('Permissions', PermissionSchema)

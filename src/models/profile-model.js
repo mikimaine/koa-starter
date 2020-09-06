@@ -55,4 +55,4 @@ ProfileSchema.pre('save', function preSave(next) {
   model.updated_at = now
 })
 
-module.exports = mongoose.model('Profiles', ProfileSchema)
+export default mongoose.model('Profiles', ProfileSchema)

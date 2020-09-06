@@ -31,4 +31,4 @@ NotificationSchema.statics.attributes = {
 
 NotificationSchema.plugin(mongoosePaginate)
 
-module.exports = mongoose.model('Notifications', NotificationSchema)
+export default mongoose.model('Notifications', NotificationSchema)

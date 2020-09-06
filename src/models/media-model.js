@@ -36,4 +36,4 @@ MediaSchema.statics.attributes = {
 
 MediaSchema.plugin(mongoosePaginate)
 
-module.exports = mongoose.model('Media', MediaSchema)
+export default mongoose.model('Media', MediaSchema)

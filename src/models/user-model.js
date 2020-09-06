@@ -157,4 +157,4 @@ UserSchema.statics.hashPasswd = function(passwd, cb) {
   bcrypt.genSalt(12, generateSalt)
 }
 
-module.exports = mongoose.model('Users', UserSchema)
+export default mongoose.model('Users', UserSchema)

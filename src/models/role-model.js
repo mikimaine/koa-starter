@@ -48,4 +48,4 @@ RoleSchema.pre('save', function preSave(next) {
   next()
 })
 
-module.exports = mongoose.model('Roles', RoleSchema)
+export default mongoose.model('Roles', RoleSchema)
