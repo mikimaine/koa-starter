@@ -51,9 +51,15 @@ export default function createRoleStore(logger, roleModel, permissionModel) {
      */
     async get(id) {
       logger.debug(`Getting ${collectionName} with id ${id}`)
-      const found = await model.find({
-        _id: id.toString()
-      })
+      const found = await model
+        .findOne(
+          {
+            _id: id.toString()
+          },
+          returnFields
+        )
+        .populate(population)
+        .exec()
       if (!found) {
         return null
       }
@@ -67,16 +73,24 @@ export default function createRoleStore(logger, roleModel, permissionModel) {
      */
     async findMany(ids) {
       logger.debug(`Getting ${collectionName} with ids`)
-      const founds = await model.find({
-        _id: {
-          $in: ids
+      const founds = await model.find(
+        {
+          _id: {
+            $in: ids
+          }
+        },
+        null,
+        {
+          select: returnFields,
+          populate: population
         }
-      })
+      )
       if (!founds) {
         return null
       }
       return founds
     },
+
     /**
      *
      *
@@ -85,12 +99,16 @@ export default function createRoleStore(logger, roleModel, permissionModel) {
      */
     async getBy(data) {
       logger.debug(`Getting ${collectionName}`)
-      const found = await model.findOne(data)
+      const found = await model
+        .findOne(data, returnFields)
+        .populate(population)
+        .exec()
       if (!found) {
         return null
       }
-      return pick(found, [...Object.keys(returnFields)])
+      return found
     },
+
     /**
      *
      *
@@ -102,6 +120,7 @@ export default function createRoleStore(logger, roleModel, permissionModel) {
       logger.debug(`Created new ${collectionName}`, result)
       return pick(result, [...Object.keys(returnFields)])
     },
+
     /**
      *
      *
@@ -113,19 +132,30 @@ export default function createRoleStore(logger, roleModel, permissionModel) {
       const result = await model.findOneAndUpdate(
         { _id: id.toString() },
         data,
-        { new: true, select: returnFields }
+        { new: true, select: returnFields, populate: population }
       )
       logger.debug(`Updated ${collectionName} ${id}`, result)
       return result
     },
+
     /**
      *
      *
-     * @param {*} id
+     * @param {*} data
+     * @returns
      */
-    async remove(id) {
-      model.delete(x => x._id === id.toString())
-      logger.debug(`Removed ${collectionName} ${id}`)
+    async uploadMedia(data) {
+      const result = await collectionName.insertOne({
+        imagePath: data.filePath
+      })
+      logger.debug(`Created new ${collectionName}`, result)
+      return pick(result, [...Object.keys(returnFields)])
+    },
+
+    async remove(item) {
+      item.remove()
+      logger.debug(`Removed ${collectionName} ${item._id}`)
+      return item
     }
   }
 }
