@@ -1,19 +1,20 @@
-const jwt = require('jsonwebtoken')
+import { env } from './env'
 
+const jwt = require('jsonwebtoken')
 const passport = require('koa-passport')
 const passportJWT = require('passport-jwt')
 
 const ExtractJWT = passportJWT.ExtractJwt.fromAuthHeaderAsBearerToken()
 const JWTStrategy = passportJWT.Strategy
 
-// const key = require('./env')
+const key = env.JWT_TOKEN_KEY || 'RandomToken' // please make sure that you have a unique token
 
 /**
  *
  */
 passport.use(
   new JWTStrategy(
-    { jwtFromRequest: ExtractJWT, secretOrKey: 'your_jwt_secret' },
+    { jwtFromRequest: ExtractJWT, secretOrKey: key },
     (jwtPayload, cb) => {
       if (!jwtPayload.archived) return cb(null, jwtPayload)
 
@@ -23,5 +24,5 @@ passport.use(
 )
 
 export function sign(data) {
-  return jwt.sign(data, 'your_jwt_secret')
+  return jwt.sign(data, key)
 }
