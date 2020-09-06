@@ -25,12 +25,12 @@ export default class MediaService {
       limit: parseInt(params.limits) || 50
     }
 
-    const categories = await this.store.paginate(query, options)
-    if (!categories) {
+    const medias = await this.store.paginate(query, options)
+    if (!medias) {
       throw new Error('There was an error retrieving medias.')
-    } else {
-      return categories
     }
+
+    return medias
   }
 
   async filter(params) {
