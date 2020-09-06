@@ -4,14 +4,13 @@ const jwt = require('jsonwebtoken')
 const passport = require('koa-passport')
 const passportJWT = require('passport-jwt')
 
-const ExtractJWT = passportJWT.ExtractJwt.fromAuthHeaderAsBearerToken()
-const JWTStrategy = passportJWT.Strategy
-
+// Key for signing JWT token
 const key = env.JWT_TOKEN_KEY || 'RandomToken' // please make sure that you have a unique token
 
-/**
- *
- */
+const ExtractJWT = passportJWT.ExtractJwt.fromAuthHeaderAsBearerToken()
+
+const JWTStrategy = passportJWT.Strategy
+
 passport.use(
   new JWTStrategy(
     { jwtFromRequest: ExtractJWT, secretOrKey: key },
@@ -23,6 +22,13 @@ passport.use(
   )
 )
 
+/**
+ *
+ *
+ * @export
+ * @param {*} data
+ * @returns
+ */
 export function sign(data) {
   return jwt.sign(data, key)
 }
