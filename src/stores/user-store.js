@@ -1,9 +1,14 @@
 import { pick } from 'lodash'
 
 /**
- * User model store.
  *
- * gets the logger injected.
+ * User model store.
+ * @export
+ * @param {*} logger
+ * @param {*} userModel
+ * @param {*} roleModel
+ * @param {*} permissionModel
+ * @returns
  */
 export default function createUserStore(
   logger,
@@ -57,9 +62,15 @@ export default function createUserStore(
      */
     async get(id) {
       logger.debug(`Getting ${collectionName} with id ${id}`)
-      const found = await model.find({
-        _id: id.toString()
-      })
+      const found = await model
+        .findOne(
+          {
+            _id: id.toString()
+          },
+          returnFields
+        )
+        .populate(population)
+        .exec()
       if (!found) {
         return null
       }
@@ -73,11 +84,18 @@ export default function createUserStore(
      */
     async findMany(ids) {
       logger.debug(`Getting ${collectionName} with ids`)
-      const founds = await model.find({
-        _id: {
-          $in: ids
+      const founds = await model.find(
+        {
+          _id: {
+            $in: ids
+          }
+        },
+        null,
+        {
+          select: returnFields,
+          populate: population
         }
-      })
+      )
       if (!founds) {
         return null
       }
@@ -91,13 +109,53 @@ export default function createUserStore(
      */
     async getBy(data) {
       logger.debug(`Getting ${collectionName}`)
-      const found = await model.findOne(data, returnFields)
-      console.log(found, 'found')
+      const found = await model
+        .findOne(data, returnFields)
+        .populate(population)
+        .exec()
 
       if (!found) {
         return null
       }
       return pick(found, [...Object.keys(returnFields)])
+    },
+
+    /**
+     *
+     *
+     * @param {*} data
+     * @returns
+     */
+    async create(data) {
+      const result = await model.create(data)
+      logger.debug(`Created new ${collectionName}`, result)
+      return pick(result, [...Object.keys(returnFields)])
+    },
+    /**
+     *
+     *
+     * @param {*} id
+     * @param {*} data
+     * @returns
+     */
+    async update(id, data) {
+      const result = await model.findOneAndUpdate(
+        { _id: id.toString() },
+        data,
+        { new: true, select: returnFields, populate: population }
+      )
+      logger.debug(`Updated ${collectionName} ${id}`, result)
+      return result
+    },
+    /**
+     *
+     *
+     * @param {*} id
+     */
+    async remove(item) {
+      item.remove()
+      logger.debug(`Removed ${collectionName} ${item._id}`)
+      return item
     },
     /**
      *
@@ -120,17 +178,6 @@ export default function createUserStore(
     /**
      *
      *
-     * @param {*} data
-     * @returns
-     */
-    async create(data) {
-      const result = await model.create(data)
-      logger.debug(`Created new ${collectionName}`, result)
-      return pick(result, [...Object.keys(returnFields)])
-    },
-    /**
-     *
-     *
      * @param {*} id
      * @param {*} data
      * @returns
@@ -146,31 +193,6 @@ export default function createUserStore(
       })
       logger.debug(`Updated ${collectionName} ${id}`, result)
       return result
-    },
-    /**
-     *
-     *
-     * @param {*} id
-     * @param {*} data
-     * @returns
-     */
-    async update(id, data) {
-      const result = await model.findOneAndUpdate(
-        { _id: id.toString() },
-        data,
-        { new: true, select: returnFields }
-      )
-      logger.debug(`Updated ${collectionName} ${id}`, result)
-      return result
-    },
-    /**
-     *
-     *
-     * @param {*} id
-     */
-    async remove(id) {
-      model.delete(x => x._id === id.toString())
-      logger.debug(`Removed ${collectionName} ${id}`)
     }
   }
 }

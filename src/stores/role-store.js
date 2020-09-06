@@ -141,6 +141,17 @@ export default function createRoleStore(logger, roleModel, permissionModel) {
     /**
      *
      *
+     * @param {*} item
+     * @returns
+     */
+    async remove(item) {
+      item.remove()
+      logger.debug(`Removed ${collectionName} ${item._id}`)
+      return item
+    },
+    /**
+     *
+     *
      * @param {*} data
      * @returns
      */
@@ -150,12 +161,6 @@ export default function createRoleStore(logger, roleModel, permissionModel) {
       })
       logger.debug(`Created new ${collectionName}`, result)
       return pick(result, [...Object.keys(returnFields)])
-    },
-
-    async remove(item) {
-      item.remove()
-      logger.debug(`Removed ${collectionName} ${item._id}`)
-      return item
     }
   }
 }

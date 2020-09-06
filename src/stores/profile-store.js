@@ -138,6 +138,17 @@ export default function createProfileStore(logger, profileModel) {
       logger.debug(`Updated ${collectionName} ${id}`, result)
       return result
     },
+    /**
+     *
+     *
+     * @param {*} item
+     * @returns
+     */
+    async remove(item) {
+      item.remove()
+      logger.debug(`Removed ${collectionName} ${item._id}`)
+      return item
+    },
 
     /**
      *
@@ -151,12 +162,6 @@ export default function createProfileStore(logger, profileModel) {
       })
       logger.debug(`Created new ${collectionName}`, result)
       return pick(result, [...Object.keys(returnFields)])
-    },
-
-    async remove(item) {
-      item.remove()
-      logger.debug(`Removed ${collectionName} ${item._id}`)
-      return item
     }
   }
 }
