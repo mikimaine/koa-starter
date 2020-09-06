@@ -36,6 +36,7 @@
     "moment": "^2.27.0",
     "mongoose": "^5.10.2",
     "mongoose-paginate": "^5.0.3",
+    "node-fetch": "^2.6.1",
     "palin": "^2.2.0",
     "passport-jwt": "^4.0.0",
     "yenv": "^2.1.0"
