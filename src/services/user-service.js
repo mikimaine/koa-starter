@@ -75,7 +75,6 @@ export default class UserService {
 
   async remove(id) {
     // Make sure the model exists by calling `get`.
-    await this.get(id)
-    return this.store.remove(id)
+    return this.store.remove(await this.get(id))
   }
 }
