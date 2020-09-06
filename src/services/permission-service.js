@@ -8,13 +8,20 @@ const assertId = BadRequest.makeAssert('No id given')
 const pickProps = data => pick(data, ['name'])
 
 /**
- * User Service.
+ * Permission Service.
  */
 export default class PermissionService {
   constructor(permissionStore) {
     this.store = permissionStore
   }
 
+  /**
+   *
+   *
+   * @param {*} params
+   * @returns
+   * @memberof PermissionService
+   */
   async find(params) {
     const query = {}
 
@@ -33,6 +40,13 @@ export default class PermissionService {
     }
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @returns
+   * @memberof PermissionService
+   */
   async get(id) {
     assertId(id)
     // If `Store.get()` returns a falsy value, we throw a
@@ -42,6 +56,13 @@ export default class PermissionService {
       .then(NotFound.makeAssert(`Permission with id "${id}" not found`))
   }
 
+  /**
+   *
+   *
+   * @param {*} data
+   * @returns
+   * @memberof PermissionService
+   */
   async create(data) {
     BadRequest.assert(data, 'No role payload given')
     BadRequest.assert(data.name, 'Permission name is required')
@@ -49,6 +70,14 @@ export default class PermissionService {
     return this.store.create(pickProps(data))
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @param {*} data
+   * @returns
+   * @memberof PermissionService
+   */
   async update(id, data) {
     assertId(id)
     BadRequest.assert(data, 'No permission payload given')
@@ -61,9 +90,15 @@ export default class PermissionService {
     return this.store.update(id, picked)
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @returns
+   * @memberof PermissionService
+   */
   async remove(id) {
     // Make sure the model exists by calling `get`.
-    await this.get(id)
-    return this.store.remove(id)
+    return this.store.remove(await this.get(id))
   }
 }
