@@ -25,6 +25,12 @@ export async function createServer() {
 
   // Container is configured with our services and whatnot.
   const container = (app.container = await configureContainer())
+
+  const migration = container.resolve('migrationStore')
+  migration.migratePermission()
+  migration.migrateRole()
+  migration.migrateUser()
+  //
   app
     // Top middleware is the error handler.
     .use(errorHandler)
