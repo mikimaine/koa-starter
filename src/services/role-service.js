@@ -15,6 +15,13 @@ export default class RoleService {
     this.store = roleStore
   }
 
+  /**
+   *
+   *
+   * @param {*} params
+   * @returns
+   * @memberof RoleService
+   */
   async find(params) {
     const query = {}
 
@@ -26,6 +33,7 @@ export default class RoleService {
     }
 
     const results = await this.store.paginate(query, options)
+
     if (!results) {
       throw new Error('There was an error retrieving roles.')
     } else {
@@ -33,6 +41,13 @@ export default class RoleService {
     }
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @returns
+   * @memberof RoleService
+   */
   async get(id) {
     assertId(id)
     // If `Store.get()` returns a falsy value, we throw a
@@ -42,6 +57,13 @@ export default class RoleService {
       .then(NotFound.makeAssert(`Role with id "${id}" not found`))
   }
 
+  /**
+   *
+   *
+   * @param {*} data
+   * @returns
+   * @memberof RoleService
+   */
   async create(data) {
     BadRequest.assert(data, 'No role payload given')
     BadRequest.assert(data.name, 'Role name is required')
@@ -49,6 +71,14 @@ export default class RoleService {
     return this.store.create(pickProps(data))
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @param {*} data
+   * @returns
+   * @memberof RoleService
+   */
   async update(id, data) {
     assertId(id)
     BadRequest.assert(data, 'No role payload given')
