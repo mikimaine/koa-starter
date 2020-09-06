@@ -3,8 +3,6 @@ import { pick } from 'lodash'
 
 const fetch = require('node-fetch')
 
-const passport = require('../lib/passport')
-
 // Prevent overposting.
 const pickProps = data => pick(data, ['username', 'password', 'email', 'roles'])
 
@@ -13,12 +11,15 @@ const pickProps = data => pick(data, ['username', 'password', 'email', 'roles'])
  */
 export default class AuthService {
   /**
-   *Creates an instance of AuthService.
+   * Creates an instance of AuthService.
    * @param {*} userStore
    * @memberof AuthService
    */
-  constructor(userStore, roleStore) {
+  constructor(passportLib, userStore, roleStore) {
+    this.passport = passportLib
+
     this.store = userStore
+
     this.roleStore = roleStore
   }
   /**
@@ -29,8 +30,7 @@ export default class AuthService {
    * @memberof AuthService
    */
   async logIn(ctx) {
-    let data = ctx.request.body
-
+    let data = ctx
     BadRequest.assert(data, 'No user payload given')
     BadRequest.assert(data.email, 'email is required')
     BadRequest.assert(data.password, 'password is required')
@@ -39,11 +39,18 @@ export default class AuthService {
 
     NotFound.assert(user, 'User not found')
 
-    let token = passport.sign(user)
+    let token = this.passport.sign(user)
 
     return { ...user, token }
   }
 
+  /**
+   *
+   *
+   * @param {*} ctx
+   * @returns
+   * @memberof AuthService
+   */
   async logInWithFacebook(ctx) {
     let data = ctx.request.body
 
@@ -74,7 +81,7 @@ export default class AuthService {
         user['new'] = true
       }
 
-      let token = passport.sign(user)
+      let token = this.passport.sign(user)
 
       return { ...user, token }
     } catch (error) {
@@ -82,6 +89,13 @@ export default class AuthService {
     }
   }
 
+  /**
+   *
+   *
+   * @param {*} ctx
+   * @returns
+   * @memberof AuthService
+   */
   async logInWithLinkedIn(ctx) {
     const data = ctx.request.body
 
@@ -114,7 +128,7 @@ export default class AuthService {
         user['new'] = true
       }
 
-      let token = passport.sign(user)
+      let token = this.passport.sign(user)
 
       return { ...user, token }
     } catch (error) {
@@ -122,6 +136,13 @@ export default class AuthService {
     }
   }
 
+  /**
+   *
+   *
+   * @param {*} ctx
+   * @returns
+   * @memberof AuthService
+   */
   async logInWithGoogle(ctx) {
     const data = ctx.request.body
 
@@ -149,7 +170,7 @@ export default class AuthService {
         }
         user = await this.store.create(newUser)
       }
-      let token = passport.sign(user)
+      let token = this.passport.sign(user)
       return { ...user, token }
     } catch (error) {
       return { error: error }
@@ -178,6 +199,13 @@ export default class AuthService {
     return { success: true, message: 'Reset code sent to users Email', code }
   }
 
+  /**
+   *
+   *
+   * @param {*} ctx
+   * @returns
+   * @memberof AuthService
+   */
   async resetPassword(ctx) {
     const data = ctx.request.body
 
@@ -185,22 +213,16 @@ export default class AuthService {
     BadRequest.assert(data.email, 'Email is required')
     BadRequest.assert(data.code, 'code is required')
 
-    this.logData['reqAction'] = 'Reset Password'
-
     let user = await this.store.getBy({ email: data.email })
 
     if (user && user.reset_code === data.code) {
-      this.logData['docQuery'] = { email: data.email }
-      this.logData['docID'] = user._id
-      this.logData['user'] = user._id
-
       let resetPWDData = {
         reset_code: '',
         password: ''
       }
 
       await this.store.update(user._id, resetPWDData)
-      let token = passport.sign(user)
+      let token = this.passport.sign(user)
       return { ...user, token }
     }
     return BadRequest.assert(null, "Code Expired or dosen't exist")
@@ -212,20 +234,17 @@ export default class AuthService {
    * @returns
    * @memberof AuthService
    */
-  async create(ctx) {
-    const data = ctx.request.body
-
+  async create(data) {
     BadRequest.assert(data, 'No user payload given')
     BadRequest.assert(data.username, 'Username is required')
     BadRequest.assert(data.email, 'Email is required')
     BadRequest.assert(data.password, 'Password is required')
 
-    let userRole = await this.roleStore.getBy({ name: 'USER' })
+    // let userRole = await this.roleStore.getBy({ name: 'USER' })
 
-    data['roles'] = userRole._id
+    // data['roles'] = []
 
     // send welcome email
-
     return this.store.create(pickProps(data))
   }
   /**
