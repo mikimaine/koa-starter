@@ -3,6 +3,13 @@ import bcrypt from 'bcrypt'
 import moment from 'moment'
 import mongoosePaginate from 'mongoose-paginate'
 
+/**
+ *
+ *
+ * @export
+ * @param {*} logger
+ * @returns
+ */
 export default function createUserModel(logger) {
   var Schema = mongoose.Schema
 
@@ -79,6 +86,12 @@ export default function createUserModel(logger) {
     })
   }
 
+  /**
+   * Generate Strong password
+   *
+   * @param {String} password submitted password
+   * @param {Function} cb Callback function
+   */
   UserSchema.methods.newPassword = function newPassword(passwd) {
     return new Promise((resolve, reject) => {
       UserSchema.statics.hashPasswd(passwd, (err, hash) => {
@@ -91,6 +104,12 @@ export default function createUserModel(logger) {
     })
   }
 
+  /**
+   * Check if user have permission
+   *
+   * @param {Array} permissions
+   * @param {Function} cb Callback function
+   */
   UserSchema.methods.hasPermission = function hasPermission(permissions) {
     // check if it has permission
     let myPermissions = this.permissions
@@ -135,6 +154,12 @@ export default function createUserModel(logger) {
     })
   })
 
+  /**
+   * Hash given password
+   *
+   * @param {String} password submitted password
+   * @param {Function} cb Callback function
+   */
   UserSchema.statics.hashPasswd = function(passwd, cb) {
     let createHash = (err, hash) => {
       if (err) {
