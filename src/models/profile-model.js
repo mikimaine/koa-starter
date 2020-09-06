@@ -2,6 +2,13 @@ import mongoose from 'mongoose'
 import moment from 'moment'
 import mongoosePaginate from 'mongoose-paginate'
 
+/**
+ *
+ *
+ * @export
+ * @param {*} logger
+ * @returns
+ */
 export default function createProfileModel(logger) {
   var Schema = mongoose.Schema
 
