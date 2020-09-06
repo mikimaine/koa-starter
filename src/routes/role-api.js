@@ -4,6 +4,8 @@ import passport from 'koa-passport'
 
 import '../lib/passport'
 
+import { hasPermission } from '../middleware/permission'
+
 // This is our API controller.
 // All it does is map HTTP calls to service calls.
 // This way our services could be used in any type of app, not
@@ -23,6 +25,6 @@ const api = roleService => ({
 export default createController(api)
   .prefix('/role')
   .before([passport.authenticate('jwt', { session: false })])
-  .post('', 'createRole')
-  .get('', 'findRoles')
-  .patch('/:id', 'update')
+  .post('', 'createRole', { before: [hasPermission('create role')] })
+  .get('', 'findRoles', { before: [hasPermission('view any role')] })
+  .patch('/:id', 'update', { before: [hasPermission('update role')] })
