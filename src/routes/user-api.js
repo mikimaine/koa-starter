@@ -3,7 +3,7 @@ import { createController } from 'awilix-koa'
 import passport from 'koa-passport'
 
 // import { hasPermission } from '../middleware/permission'
-import '../lib/passport'
+// import '../lib/passport'
 
 // This is our API controller.
 // All it does is map HTTP calls to service calls.
