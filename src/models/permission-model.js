@@ -2,7 +2,14 @@ import mongoose from 'mongoose'
 import moment from 'moment'
 import mongoosePaginate from 'mongoose-paginate'
 
-export default function createRoleModel(logger) {
+/**
+ *
+ *
+ * @export
+ * @param {*} logger
+ * @returns
+ */
+export default function createPermissionModel(logger) {
   var Schema = mongoose.Schema
 
   /**
