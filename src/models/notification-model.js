@@ -1,7 +1,14 @@
 import mongoose from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate'
 
-export default function createRoleModel(logger) {
+/**
+ *
+ *
+ * @export
+ * @param {*} logger
+ * @returns
+ */
+export default function createNotificationModel(logger) {
   var Schema = mongoose.Schema
 
   /**
