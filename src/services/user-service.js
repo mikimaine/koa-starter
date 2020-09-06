@@ -18,6 +18,13 @@ export default class UserService {
     this.notificationStore = notificationStore
   }
 
+  /**
+   *
+   *
+   * @param {*} params
+   * @returns
+   * @memberof UserService
+   */
   async find(params) {
     const query = {}
 
@@ -36,6 +43,13 @@ export default class UserService {
     }
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @returns
+   * @memberof UserService
+   */
   async get(id) {
     assertId(id)
     // If `Store.get()` returns a falsy value, we throw a
@@ -45,6 +59,13 @@ export default class UserService {
       .then(NotFound.makeAssert(`User with id "${id}" not found`))
   }
 
+  /**
+   *
+   *
+   * @param {*} data
+   * @returns
+   * @memberof UserService
+   */
   async create(data) {
     BadRequest.assert(data, 'No user payload given')
     BadRequest.assert(data.username, 'Username is required')
@@ -55,12 +76,28 @@ export default class UserService {
     return this.store.create(pickProps(data))
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @param {*} data
+   * @returns
+   * @memberof UserService
+   */
   async updatePassword(id, data) {
     BadRequest.assert(data, 'No password payload given')
 
     return this.store.updatePassword(id, pick(data, ['password']))
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @param {*} data
+   * @returns
+   * @memberof UserService
+   */
   async update(id, data) {
     assertId(id)
     BadRequest.assert(data, 'No user payload given')
@@ -73,6 +110,13 @@ export default class UserService {
     return this.store.update(id, picked)
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @returns
+   * @memberof UserService
+   */
   async remove(id) {
     // Make sure the model exists by calling `get`.
     return this.store.remove(await this.get(id))
