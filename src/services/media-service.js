@@ -67,9 +67,7 @@ export default class MediaService {
 
   async update(id, data) {
     assertId(id)
-    BadRequest.assert(data, 'No category payload given')
-    // console.log(JSON.parse("["+data.attributes+"]"), 'data')
-    // console.log(data.attributes.split(",").map(Number), 'data')
+    BadRequest.assert(data, 'No media payload given')
     // Make sure the model exists by calling `get`.
     await this.get(id)
 
