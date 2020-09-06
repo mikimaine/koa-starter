@@ -1,7 +1,13 @@
+import { pick } from 'lodash'
+
 /**
- * Notification model store.
  *
- * gets the logger injected.
+ *
+ * @export
+ * @param {*} logger
+ * @param {*} userModel
+ * @param {*} notificationModel
+ * @returns
  */
 export default function createTripStore(logger, userModel, notificationModel) {
   const model = notificationModel
@@ -112,7 +118,7 @@ export default function createTripStore(logger, userModel, notificationModel) {
     async create(data) {
       const result = await model.create(data)
       logger.debug(`Created new ${collectionName}`, result)
-      return result
+      return pick(result, [...Object.keys(returnFields)])
     },
     /**
      *

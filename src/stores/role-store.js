@@ -1,9 +1,13 @@
 import { pick } from 'lodash'
 
 /**
- * User model store.
+ * Role Model Store
  *
- * gets the logger injected.
+ * @export
+ * @param {*} logger
+ * @param {*} roleModel
+ * @param {*} permissionModel
+ * @returns
  */
 export default function createRoleStore(logger, roleModel, permissionModel) {
   const model = roleModel
