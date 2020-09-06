@@ -57,13 +57,12 @@ export default class MediaService {
     // NotFound error with the specified message.
     return this.store
       .get(id)
-      .then(NotFound.makeAssert(`Airport with id "${id}" not found`))
+      .then(NotFound.makeAssert(`Media with id "${id}" not found`))
   }
 
   async create(ctx) {
     const _id = ctx.state.user._id
-    const saveData = { ...ctx.req.file, user: _id }
-    return this.store.create(saveData)
+    return this.store.create({ ...ctx.req.file, user: _id })
   }
 
   async update(id, data) {
