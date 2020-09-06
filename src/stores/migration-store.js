@@ -19,6 +19,10 @@ export default function createMigrationStore(
   let users = config.migration.users
 
   return {
+    /**
+     * Permission migration when the server is started
+     *
+     */
     async migratePermission() {
       logger.debug(`Checking if permission migration is needed ...`)
 
@@ -47,6 +51,10 @@ export default function createMigrationStore(
       }
       logger.debug(`Noting to migrate for permissions`)
     },
+    /**
+     * Role migration when server is created
+     *
+     */
     async migrateRole() {
       logger.debug(`Checking if role migration is needed ...`)
 
@@ -72,6 +80,10 @@ export default function createMigrationStore(
       })
       logger.debug(`completed role migration`)
     },
+    /**
+     * User migration when server is created
+     *
+     */
     async migrateUser() {
       logger.debug(`Checking if user migration is needed ...`)
       await users.forEach(async u => {
