@@ -61,9 +61,15 @@ export default class RoleService {
     return this.store.update(id, picked)
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @returns
+   * @memberof RoleService
+   */
   async remove(id) {
     // Make sure the model exists by calling `get`.
-    await this.get(id)
-    return this.store.remove(id)
+    return this.store.remove(await this.get(id))
   }
 }
