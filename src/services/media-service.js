@@ -15,6 +15,13 @@ export default class MediaService {
     this.store = mediaStore
   }
 
+  /**
+   *
+   *
+   * @param {*} params
+   * @returns
+   * @memberof MediaService
+   */
   async find(params) {
     const query = {}
 
@@ -33,6 +40,13 @@ export default class MediaService {
     return medias
   }
 
+  /**
+   *
+   *
+   * @param {*} params
+   * @returns
+   * @memberof MediaService
+   */
   async filter(params) {
     const query = {}
 
@@ -51,6 +65,13 @@ export default class MediaService {
     }
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @returns
+   * @memberof MediaService
+   */
   async get(id) {
     assertId(id)
     // If `Store.get()` returns a falsy value, we throw a
@@ -60,11 +81,27 @@ export default class MediaService {
       .then(NotFound.makeAssert(`Media with id "${id}" not found`))
   }
 
+  /**
+   *
+   *
+   * @param {*} ctx
+   * @returns
+   * @memberof MediaService
+   */
   async create(ctx) {
     const _id = ctx.state.user._id
+    // formal file upload needs to be done
     return this.store.create({ ...ctx.req.file, user: _id })
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @param {*} data
+   * @returns
+   * @memberof MediaService
+   */
   async update(id, data) {
     assertId(id)
     BadRequest.assert(data, 'No media payload given')
@@ -76,9 +113,15 @@ export default class MediaService {
     return this.store.update(id, picked)
   }
 
+  /**
+   *
+   *
+   * @param {*} id
+   * @returns
+   * @memberof MediaService
+   */
   async remove(id) {
     // Make sure the model exists by calling `get`.
-    await this.get(id)
-    return this.store.remove(id)
+    return this.store.remove(await this.get(id))
   }
 }
