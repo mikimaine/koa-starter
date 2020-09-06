@@ -66,6 +66,31 @@ export default function createProfileStore(logger, profileModel) {
       }
       return found
     },
+    /**
+     *
+     *
+     * @param {*} ids
+     * @returns
+     */
+    async findMany(ids) {
+      logger.debug(`Getting ${collectionName} with ids`)
+      const founds = await model.find(
+        {
+          _id: {
+            $in: ids
+          }
+        },
+        null,
+        {
+          select: returnFields,
+          populate: population
+        }
+      )
+      if (!founds) {
+        return null
+      }
+      return founds
+    },
 
     /**
      *
