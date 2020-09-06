@@ -1,16 +1,18 @@
 import { pick } from 'lodash'
 
-const permissionModel = require('../models/permission-model')
-const returnFields = permissionModel.attributes
 /**
  * User model store.
  *
  * gets the logger injected.
  */
-export default function createPermissionStore(logger) {
-  let model = permissionModel
+export default function createPermissionStore(logger, permissionModel) {
+  const model = permissionModel
 
-  let collectionName = model.collection.name
+  const collectionName = model.collection.name
+
+  const returnFields = permissionModel.attributes
+
+  const population = []
 
   return {
     /**
@@ -20,7 +22,10 @@ export default function createPermissionStore(logger) {
      */
     async find() {
       logger.debug(`Finding ${collectionName}`)
-      return model.find({})
+      return model.find({}, null, {
+        select: returnFields,
+        populate: population
+      })
     },
     /**
      *
@@ -33,7 +38,7 @@ export default function createPermissionStore(logger) {
       logger.debug(`Finding and paginating ${collectionName}`)
       return model.paginate(
         query,
-        Object.assign(options, { select: returnFields })
+        Object.assign(options, { select: returnFields, populate: population })
       )
     },
     /**
@@ -44,9 +49,15 @@ export default function createPermissionStore(logger) {
      */
     async get(id) {
       logger.debug(`Getting ${collectionName} with id ${id}`)
-      const found = await model.find({
-        _id: id.toString()
-      })
+      const found = await model
+        .findOne(
+          {
+            _id: id.toString()
+          },
+          returnFields
+        )
+        .populate(population)
+        .exec()
       if (!found) {
         return null
       }

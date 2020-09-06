@@ -1,23 +1,27 @@
 import { pick } from 'lodash'
 
-const userModel = require('../models/user-model')
-const roleModel = require('../models/role-model')
-const permissionModel = require('../models/permission-model')
-
-const returnFields = userModel.attributes
 /**
  * User model store.
  *
  * gets the logger injected.
  */
-export default function createUserStore(logger) {
-  let model = userModel
+export default function createUserStore(
+  logger,
+  userModel,
+  roleModel,
+  permissionModel
+) {
+  const model = userModel
 
-  let collectionName = model.collection.name
-  let population = [
+  const collectionName = model.collection.name
+
+  const returnFields = userModel.attributes
+
+  const population = [
     { path: 'permissions', select: permissionModel.attributes },
     { path: 'roles', select: roleModel.attributes }
   ]
+
   return {
     /**
      *

@@ -1,16 +1,18 @@
 import { pick } from 'lodash'
 
-const profileModel = require('../models/profile-model')
-const returnFields = profileModel.attributes
 /**
  * Profile model store.
  *
  * gets the logger injected.
  */
-export default function createProfileStore(logger) {
-  let model = profileModel
+export default function createProfileStore(logger, profileModel) {
+  const model = profileModel
 
-  let collectionName = model.collection.name
+  const collectionName = model.collection.name
+
+  const returnFields = profileModel.attributes
+
+  const population = []
 
   return {
     /**
@@ -20,7 +22,10 @@ export default function createProfileStore(logger) {
      */
     async find() {
       logger.debug(`Finding ${collectionName}`)
-      return model.find({})
+      return model.find({}, null, {
+        select: returnFields,
+        populate: population
+      })
     },
     /**
      *

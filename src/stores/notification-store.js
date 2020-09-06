@@ -1,18 +1,16 @@
-const notificationModel = require('../models/notification-model')
-const userModel = require('../models/user-model')
-
-const returnFields = notificationModel.attributes
 /**
  * Notification model store.
  *
  * gets the logger injected.
  */
-export default function createTripStore(logger) {
-  let model = notificationModel
+export default function createTripStore(logger, userModel, notificationModel) {
+  const model = notificationModel
 
-  let collectionName = model.collection.name
+  const collectionName = model.collection.name
 
-  let population = [{ path: 'user', select: userModel.attributes }]
+  const returnFields = notificationModel.attributes
+
+  const population = [{ path: 'user', select: userModel.attributes }]
 
   return {
     async find() {
