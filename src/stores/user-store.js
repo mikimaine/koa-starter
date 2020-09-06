@@ -24,7 +24,11 @@ export default function createUserStore(
 
   const population = [
     { path: 'permissions', select: permissionModel.attributes },
-    { path: 'roles', select: roleModel.attributes }
+    {
+      path: 'roles',
+      select: roleModel.attributes,
+      populate: { path: 'permissions', select: permissionModel.attributes }
+    }
   ]
 
   return {
@@ -165,7 +169,10 @@ export default function createUserStore(
      */
     async isMatch(data) {
       logger.debug(`Getting ${collectionName}`)
-      const found = await model.findOne({ email: data.email })
+      const found = await model
+        .findOne({ email: data.email })
+        .populate(population)
+        .exec()
       if (!found) {
         return null
       }
