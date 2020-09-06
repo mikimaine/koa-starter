@@ -22,17 +22,18 @@ passport.use(
   )
 )
 
-// /**
-//  *
-//  *
-//  * @export
-//  * @param {*} data
-//  * @returns
-//  */
-// export function sign(data) {
-//   return jwt.sign(data, key)
-// }
+/**
+ *
+ *
+ *
+ */
 export const passportLib = {
+  /**
+   *
+   *
+   * @param {*} data
+   * @returns
+   */
   sign(data) {
     let permissions = data.roles.reduce(
       (pre, next) => [...pre, ...next.permissions.map(v => v.name)],
