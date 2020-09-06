@@ -1,4 +1,4 @@
-exports.hasPermission = permissions => async (ctx, next) => {
+export const hasPermission = permissions => async (ctx, next) => {
   const { user } = ctx.state
   const errors = []
 
