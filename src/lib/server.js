@@ -26,7 +26,11 @@ mongoose.Promise = require('bluebird')
 export async function createServer() {
   logger.debug('Connecting to database...')
   mongoose
-    .connect(env.MONGO_URL)
+    .connect(env.MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true
+    })
     .then(response => {
       logger.debug('mongo connection created')
     })
