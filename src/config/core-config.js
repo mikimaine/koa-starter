@@ -21,12 +21,7 @@ const permissions = [
   'view any media',
   'view media',
   'update media',
-  'remove media',
-
-  'add something',
-  'add another thing',
-  'something another thing',
-  'something another thing2'
+  'remove media'
 ]
 
 const roles = {
